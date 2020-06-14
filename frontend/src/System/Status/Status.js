@@ -16,7 +16,6 @@ class Status extends Component {
       <PageContent title="Status">
         <PageContentBody>
           <HealthConnector />
-          <DiskSpaceConnector />
           <AboutConnector />
           <MoreInfo />
         </PageContentBody>
