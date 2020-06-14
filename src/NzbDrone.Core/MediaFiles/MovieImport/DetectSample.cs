@@ -32,16 +32,25 @@ namespace NzbDrone.Core.MediaFiles.MovieImport
 
             var extension = Path.GetExtension(path);
 
-            if (extension != null && extension.Equals(".flv", StringComparison.InvariantCultureIgnoreCase))
+            if (extension != null)
             {
-                _logger.Debug("Skipping sample check for .flv file");
-                return DetectSampleResult.NotSample;
-            }
+                if (extension.Equals(".flv", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    _logger.Debug("Skipping sample check for .flv file");
+                    return DetectSampleResult.NotSample;
+                }
 
-            if (extension != null && extension.Equals(".strm", StringComparison.InvariantCultureIgnoreCase))
-            {
-                _logger.Debug("Skipping sample check for .strm file");
-                return DetectSampleResult.NotSample;
+                if (extension.Equals(".strm", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    _logger.Debug("Skipping sample check for .strm file");
+                    return DetectSampleResult.NotSample;
+                }
+
+                if (MediaFileExtensions.GetQualityForExtension(Path.GetExtension(path)) == Qualities.Quality.DVD)
+                {
+                    _logger.Debug($"Skipping sample check for DVD image file '{path}'");
+                    return DetectSampleResult.NotSample;
+                }
             }
 
             // TODO: Use MediaInfo from the import process, no need to re-process the file again here
