@@ -6,6 +6,7 @@ using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.MediaFiles.MediaInfo;
 using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Movies;
+using System.Linq;
 
 namespace NzbDrone.Core.MediaFiles.MovieImport
 {
@@ -40,16 +41,25 @@ namespace NzbDrone.Core.MediaFiles.MovieImport
 
             var extension = Path.GetExtension(path);
 
-            if (extension != null && extension.Equals(".flv", StringComparison.InvariantCultureIgnoreCase))
+            if (extension != null)
             {
-                _logger.Debug("Skipping sample check for .flv file");
-                return false;
-            }
+                if (extension.Equals(".flv", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    _logger.Debug("Skipping sample check for .flv file");
+                    return false;
+                }
 
-            if (extension != null && extension.Equals(".strm", StringComparison.InvariantCultureIgnoreCase))
-            {
-                _logger.Debug("Skipping sample check for .strm file");
-                return false;
+                if (extension.Equals(".strm", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    _logger.Debug("Skipping sample check for .strm file");
+                    return false;
+                }
+
+                if (new Source[] { Source.DVD, Source.BLURAY }.Contains(MediaFileExtensions.GetSourceForExtension(extension)))
+                {
+                    _logger.Debug($"Skipping sample check for DVD image file '{path}'");
+                    return false;
+                }
             }
 
             try
