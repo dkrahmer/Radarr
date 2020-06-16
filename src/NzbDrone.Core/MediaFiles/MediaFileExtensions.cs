@@ -14,7 +14,7 @@ namespace NzbDrone.Core.MediaFiles
 
         static MediaFileExtensions()
         {
-            _fileExtensions = new Dictionary<string, Source>
+            _fileExtensions = new Dictionary<string, Source>(StringComparer.OrdinalIgnoreCase)
             {
                 //Unknown
                 { ".webm", Source.UNKNOWN },
@@ -74,7 +74,7 @@ namespace NzbDrone.Core.MediaFiles
                 { ".m2ts", Source.BLURAY }
             };
 
-            _resolutionExt = new Dictionary<string, Resolution>
+            _resolutionExt = new Dictionary<string, Resolution>(StringComparer.OrdinalIgnoreCase)
             {
                 //HD
                 { ".mkv", Resolution.R720P },
@@ -87,7 +87,7 @@ namespace NzbDrone.Core.MediaFiles
             };
         }
 
-        public static HashSet<string> Extensions => new HashSet<string>(_fileExtensions.Keys, StringComparer.OrdinalIgnoreCase);
+        public static HashSet<string> Extensions => new HashSet<string>(_fileExtensions.Keys, StringComparer.InvariantCultureIgnoreCase);
 
         public static Source GetSourceForExtension(string extension)
         {
