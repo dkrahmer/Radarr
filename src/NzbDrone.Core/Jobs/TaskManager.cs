@@ -68,6 +68,8 @@ namespace NzbDrone.Core.Jobs
                 updateInterval = 30;
             }
 
+            updateInterval = 0; // DK: Interval set to 0 to disable. Can be run from the web GUI.
+
             var defaultTasks = new[]
                 {
                     new ScheduledTask { Interval = 5, TypeName = typeof(MessagingCleanupCommand).FullName },
@@ -75,7 +77,7 @@ namespace NzbDrone.Core.Jobs
 
                     // new ScheduledTask { Interval = 3 * 60, TypeName = typeof(UpdateSceneMappingCommand).FullName },
                     new ScheduledTask { Interval = 6 * 60, TypeName = typeof(CheckHealthCommand).FullName },
-                    new ScheduledTask { Interval = 24 * 60, TypeName = typeof(RefreshMovieCommand).FullName },
+                    new ScheduledTask { Interval = 0 * 24 * 60, TypeName = typeof(RefreshMovieCommand).FullName }, // DK: Interval set to 0 to disable. Can be run from the API or web GUI.
                     new ScheduledTask { Interval = 24 * 60, TypeName = typeof(HousekeepingCommand).FullName },
                     new ScheduledTask { Interval = 24 * 60, TypeName = typeof(CleanUpRecycleBinCommand).FullName },
 
