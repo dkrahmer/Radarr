@@ -13,6 +13,7 @@ using NzbDrone.Core.MediaFiles.MediaInfo;
 using NzbDrone.Core.Movies;
 using NzbDrone.Core.Movies.Translations;
 using NzbDrone.Core.Parser;
+using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Qualities;
 
 namespace NzbDrone.Core.Organizer

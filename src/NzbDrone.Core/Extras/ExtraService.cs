@@ -64,7 +64,7 @@ namespace NzbDrone.Core.Extras
                 movieFile = newMovieFile;
             }
 
-			CreateAfterMovieImport(localMovie.Movie, movieFile);
+            CreateAfterMovieImport(localMovie.Movie, movieFile);
         }
 
         public void ImportExtraFiles(LocalMovie localMovie, MovieFile movieFile, bool isReadOnly)
