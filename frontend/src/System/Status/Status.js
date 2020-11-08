@@ -17,7 +17,6 @@ class Status extends Component {
       <PageContent title={translate('Status')}>
         <PageContentBody>
           <HealthConnector />
-          <DiskSpaceConnector />
           <AboutConnector />
           <MoreInfo />
         </PageContentBody>
