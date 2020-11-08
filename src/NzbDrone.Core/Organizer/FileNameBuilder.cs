@@ -83,6 +83,12 @@ namespace NzbDrone.Core.Organizer
 
         public string BuildFileName(Movie movie, MovieFile movieFile, NamingConfig namingConfig = null, List<CustomFormat> customFormats = null)
         {
+            var localMovie = new LocalMovie() { Path = movieFile.OriginalFilePath };
+            if (localMovie.IsImmutableSubdirectory)
+            {
+                return Path.Combine(localMovie.SubdirectoryName, Path.GetFileNameWithoutExtension(localMovie.Path));
+            }
+
             if (namingConfig == null)
             {
                 namingConfig = _namingConfigService.GetConfig();

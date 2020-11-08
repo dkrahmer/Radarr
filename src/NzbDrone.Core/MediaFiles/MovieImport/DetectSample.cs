@@ -47,6 +47,12 @@ namespace NzbDrone.Core.MediaFiles.MovieImport
                     _logger.Debug($"Skipping sample check for DVD/BR image file '{path}'");
                     return DetectSampleResult.NotSample;
                 }
+
+                if (extension.Equals(".strm", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    _logger.Debug("Skipping sample check for .strm file");
+                    return DetectSampleResult.NotSample;
+                }
             }
 
             // TODO: Use MediaInfo from the import process, no need to re-process the file again here
