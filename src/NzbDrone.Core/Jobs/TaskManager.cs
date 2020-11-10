@@ -70,6 +70,12 @@ namespace NzbDrone.Core.Jobs
 
                     new ScheduledTask
                     {
+                        Interval = _configService.DownloadedMoviesScanInterval,
+                        TypeName = typeof(DownloadedMoviesScanCommand).FullName
+                    },
+
+                    new ScheduledTask
+                    {
                         Interval = GetBackupInterval(),
                         TypeName = typeof(BackupCommand).FullName
                     },

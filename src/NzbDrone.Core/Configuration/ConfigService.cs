@@ -234,6 +234,18 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("FileDate", value); }
         }
 
+        public string DownloadedMoviesFolder
+        {
+            get { return GetValue("DownloadedMoviesFolder", ""); }
+            set { SetValue("DownloadedMoviesFolder", value); }
+        }
+
+        public int DownloadedMoviesScanInterval
+        {
+            get { return GetValueInt("DownloadedMoviesScanInterval", 0); }
+            set { SetValue("DownloadedMoviesScanInterval", value); }
+        }
+
         public string DownloadClientWorkingFolders
         {
             get { return GetValue("DownloadClientWorkingFolders", "_UNPACK_|_FAILED_"); }

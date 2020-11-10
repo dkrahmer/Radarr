@@ -21,7 +21,9 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
         public override HealthCheck Check()
         {
-            if (!_configService.EnableCompletedDownloadHandling)
+            if (!_configService.EnableCompletedDownloadHandling
+                && string.IsNullOrWhiteSpace(_configService.DownloadedMoviesFolder)
+                && _configService.CheckForFinishedDownloadInterval == 0)
             {
                 return new HealthCheck(GetType(), HealthCheckResult.Warning, _localizationService.GetLocalizedString("ImportMechanismHealthCheckMessage"));
             }
