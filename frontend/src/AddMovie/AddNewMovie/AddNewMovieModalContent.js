@@ -24,7 +24,7 @@ class AddNewMovieModalContent extends Component {
     super(props, context);
 
     this.state = {
-      searchForMovie: false
+      searchForMovie: true
     };
   }
 
