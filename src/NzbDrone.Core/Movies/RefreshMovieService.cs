@@ -209,7 +209,9 @@ namespace NzbDrone.Core.Movies
             }
             else
             {
-                var allMovie = _movieService.GetAllMovies().OrderBy(c => c.SortTitle).ToList();
+                var movies = _movieService.GetAllMovies()
+                    .Where(m => m.Monitored) // only refresh monitored movies
+                    .OrderBy(c => c.SortTitle);
 
                 var updatedTMDBMovies = new HashSet<int>();
 
@@ -218,7 +220,7 @@ namespace NzbDrone.Core.Movies
                     updatedTMDBMovies = _movieInfo.GetChangedMovies(message.LastStartTime.Value);
                 }
 
-                foreach (var movie in allMovie)
+                foreach (var movie in movies)
                 {
                     var movieLocal = movie;
                     if ((updatedTMDBMovies.Count == 0 && _checkIfMovieShouldBeRefreshed.ShouldRefresh(movie)) || updatedTMDBMovies.Contains(movie.TmdbId) || message.Trigger == CommandTrigger.Manual)
