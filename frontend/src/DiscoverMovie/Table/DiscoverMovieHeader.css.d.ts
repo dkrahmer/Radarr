@@ -13,6 +13,7 @@ interface CssExports {
   'physicalRelease': string;
   'popularity': string;
   'ratings': string;
+  'rippableRelease': string;
   'runtime': string;
   'sortTitle': string;
   'status': string;

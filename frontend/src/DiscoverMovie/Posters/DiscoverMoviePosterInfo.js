@@ -11,6 +11,7 @@ function DiscoverMoviePosterInfo(props) {
     status,
     studio,
     inCinemas,
+    rippableRelease,
     digitalRelease,
     physicalRelease,
     certification,
@@ -52,6 +53,24 @@ function DiscoverMoviePosterInfo(props) {
     return (
       <div className={styles.info}>
         {`In Cinemas ${inCinemasDate}`}
+      </div>
+    );
+  }
+
+  if (sortKey === 'rippableRelease' && rippableRelease) {
+    const rippableReleaseDate = getRelativeDate(
+      rippableRelease,
+      shortDateFormat,
+      showRelativeDates,
+      {
+        timeFormat,
+        timeForToday: false
+      }
+    );
+
+    return (
+      <div className={styles.info}>
+        {`Rippable ${rippableReleaseDate}`}
       </div>
     );
   }

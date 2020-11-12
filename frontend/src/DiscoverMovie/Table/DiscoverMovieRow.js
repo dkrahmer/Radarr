@@ -65,6 +65,7 @@ class DiscoverMovieRow extends Component {
       originalLanguage,
       studio,
       inCinemas,
+      rippableRelease,
       physicalRelease,
       digitalRelease,
       runtime,
@@ -197,6 +198,17 @@ class DiscoverMovieRow extends Component {
                   key={name}
                   className={styles[name]}
                   date={inCinemas}
+                  component={VirtualTableRowCell}
+                />
+              );
+            }
+
+            if (name === 'rippableRelease') {
+              return (
+                <RelativeDateCellConnector
+                  key={name}
+                  className={styles[name]}
+                  date={rippableRelease}
                   component={VirtualTableRowCell}
                 />
               );
@@ -389,6 +401,7 @@ DiscoverMovieRow.propTypes = {
   images: PropTypes.arrayOf(PropTypes.object).isRequired,
   studio: PropTypes.string,
   inCinemas: PropTypes.string,
+  rippableRelease: PropTypes.string,
   physicalRelease: PropTypes.string,
   digitalRelease: PropTypes.string,
   runtime: PropTypes.number,

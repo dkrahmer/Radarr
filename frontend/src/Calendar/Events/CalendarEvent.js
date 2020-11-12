@@ -20,6 +20,7 @@ class CalendarEvent extends Component {
       movieFile,
       isAvailable,
       inCinemas,
+      rippableRelease,
       physicalRelease,
       digitalRelease,
       title,
@@ -46,6 +47,10 @@ class CalendarEvent extends Component {
 
     if (inCinemas && moment(date).isSame(moment(inCinemas), 'day')) {
       eventType.push('Cinemas');
+    }
+
+    if (rippableRelease && moment(date).isSame(moment(rippableRelease), 'day')) {
+      eventType.push('Rippable');
     }
 
     if (physicalRelease && moment(date).isSame(moment(physicalRelease), 'day')) {
@@ -146,6 +151,7 @@ CalendarEvent.propTypes = {
   titleSlug: PropTypes.string.isRequired,
   isAvailable: PropTypes.bool.isRequired,
   inCinemas: PropTypes.string,
+  rippableRelease: PropTypes.string,
   physicalRelease: PropTypes.string,
   digitalRelease: PropTypes.string,
   monitored: PropTypes.bool.isRequired,

@@ -23,6 +23,7 @@ function createCalendarEventsConnector() {
     (date, items) => {
       const filtered = _.filter(items, (item) => {
         return (item.inCinemas && moment(date).isSame(moment(item.inCinemas), 'day')) ||
+          (item.rippableRelease && moment(date).isSame(moment(item.rippableRelease), 'day')) ||
           (item.physicalRelease && moment(date).isSame(moment(item.physicalRelease), 'day')) ||
           (item.digitalRelease && moment(date).isSame(moment(item.digitalRelease), 'day'));
       });

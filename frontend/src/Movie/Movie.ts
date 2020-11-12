@@ -35,6 +35,7 @@ interface Movie extends ModelBase {
   added: string;
   year: number;
   inCinemas: string;
+  rippableRelease: string;
   physicalRelease: string;
   originalLanguage: Language;
   originalTitle: string;

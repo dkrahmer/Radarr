@@ -11,6 +11,7 @@ function MovieReleaseDates(props) {
     shortDateFormat,
     timeFormat,
     inCinemas,
+    rippableRelease,
     physicalRelease,
     digitalRelease
   } = props;
@@ -26,6 +27,17 @@ function MovieReleaseDates(props) {
               />
             </div>
             {getRelativeDate(inCinemas, shortDateFormat, showRelativeDates, { timeFormat, timeForToday: false })}
+          </div>
+      }
+      {
+        !!rippableRelease &&
+          <div >
+            <div className={styles.dateIcon}>
+              <Icon
+                name={icons.MOVIE_FILE}
+              />
+            </div>
+            {getRelativeDate(rippableRelease, shortDateFormat, showRelativeDates, { timeFormat, timeForToday: false })}
           </div>
       }
       {
@@ -60,6 +72,7 @@ MovieReleaseDates.propTypes = {
   longDateFormat: PropTypes.string.isRequired,
   timeFormat: PropTypes.string.isRequired,
   inCinemas: PropTypes.string,
+  rippableRelease: PropTypes.string,
   physicalRelease: PropTypes.string,
   digitalRelease: PropTypes.string
 };

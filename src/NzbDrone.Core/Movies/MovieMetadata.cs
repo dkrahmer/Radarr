@@ -55,13 +55,27 @@ namespace NzbDrone.Core.Movies
         public Language OriginalLanguage { get; set; }
         public List<int> Recommendations { get; set; }
         public float Popularity { get; set; }
+        public DateTime? RippableRelease
+        {
+            get
+            {
+                if (PhysicalRelease.HasValue && DigitalRelease.HasValue)
+                {
+                    return new DateTime(Math.Min(PhysicalRelease.Value.Ticks, DigitalRelease.Value.Ticks));
+                }
+                else
+                {
+                    return PhysicalRelease ?? DigitalRelease;
+                }
+            }
+        }
 
         [MemberwiseEqualityIgnore]
         public bool IsRecentMovie
         {
             get
             {
-                if ((PhysicalRelease.HasValue && PhysicalRelease.Value >= DateTime.UtcNow.AddDays(-21)) ||
+                if ((RippableRelease.HasValue && RippableRelease.Value >= DateTime.UtcNow.AddDays(-21)) ||
                     (DigitalRelease.HasValue && DigitalRelease.Value >= DateTime.UtcNow.AddDays(-21)) ||
                     (InCinemas.HasValue && InCinemas.Value >= DateTime.UtcNow.AddDays(-120)))
                 {
@@ -72,9 +86,9 @@ namespace NzbDrone.Core.Movies
             }
         }
 
-        public DateTime PhysicalReleaseDate()
+        public DateTime RippableReleaseDate()
         {
-            return PhysicalRelease ?? (InCinemas?.AddDays(90) ?? DateTime.MaxValue);
+            return RippableRelease ?? (InCinemas?.AddDays(90) ?? DateTime.MaxValue);
         }
     }
 }

@@ -255,6 +255,7 @@ class MovieDetails extends Component {
       originalTitle,
       year,
       inCinemas,
+      rippableRelease,
       physicalRelease,
       digitalRelease,
       runtime,
@@ -435,6 +436,7 @@ class MovieDetails extends Component {
                             body={
                               <MovieReleaseDatesConnector
                                 inCinemas={inCinemas}
+                                rippableRelease={rippableRelease}
                                 physicalRelease={physicalRelease}
                                 digitalRelease={digitalRelease}
                               />
@@ -807,6 +809,7 @@ MovieDetails.propTypes = {
   youTubeTrailerId: PropTypes.string,
   isAvailable: PropTypes.bool.isRequired,
   inCinemas: PropTypes.string,
+  rippableRelease: PropTypes.string,
   physicalRelease: PropTypes.string,
   digitalRelease: PropTypes.string,
   overview: PropTypes.string.isRequired,

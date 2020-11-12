@@ -131,6 +131,10 @@ export const filterPredicates = {
     return dateFilterPredicate(item.inCinemas, filterValue, type);
   },
 
+  rippableRelease: function(item, filterValue, type) {
+    return dateFilterPredicate(item.rippableRelease, filterValue, type);
+  },
+
   physicalRelease: function(item, filterValue, type) {
     return dateFilterPredicate(item.physicalRelease, filterValue, type);
   },

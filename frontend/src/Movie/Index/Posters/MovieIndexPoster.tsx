@@ -70,6 +70,7 @@ function MovieIndexPoster(props: MovieIndexPosterProps) {
     added,
     year,
     inCinemas,
+    rippableRelease,
     physicalRelease,
     digitalRelease,
     path,
@@ -138,7 +139,10 @@ function MovieIndexPoster(props: MovieIndexPosterProps) {
 
   let releaseDate = '';
   let releaseDateType = '';
-  if (physicalRelease && digitalRelease) {
+  if (rippableRelease) {
+    releaseDate = rippableRelease;
+    releaseDateType = 'Rippable';
+  } else if (physicalRelease && digitalRelease) {
     releaseDate =
       physicalRelease < digitalRelease ? physicalRelease : digitalRelease;
     releaseDateType = physicalRelease < digitalRelease ? 'Released' : 'Digital';
@@ -294,6 +298,7 @@ function MovieIndexPoster(props: MovieIndexPosterProps) {
         longDateFormat={longDateFormat}
         timeFormat={timeFormat}
         inCinemas={inCinemas}
+        rippableRelease={rippableRelease}
         physicalRelease={physicalRelease}
         digitalRelease={digitalRelease}
         ratings={ratings}

@@ -62,6 +62,7 @@ function MovieIndexRow(props: MovieIndexRowProps) {
     added,
     year,
     inCinemas,
+    rippableRelease,
     digitalRelease,
     physicalRelease,
     runtime,
@@ -244,6 +245,19 @@ function MovieIndexRow(props: MovieIndexRowProps) {
               key={name}
               className={styles[name]}
               date={inCinemas}
+              component={VirtualTableRowCell}
+            />
+          );
+        }
+
+        if (name === 'rippableRelease') {
+          return (
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore ts(2739)
+            <RelativeDateCellConnector
+              key={name}
+              className={styles[name]}
+              date={rippableRelease}
               component={VirtualTableRowCell}
             />
           );

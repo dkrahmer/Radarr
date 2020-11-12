@@ -211,6 +211,7 @@ export default function MovieIndexPosters(props: MovieIndexPostersProps) {
           heights.push(19);
         }
         break;
+      case 'rippableRelease':
       case 'digitalRelease':
       case 'physicalRelease':
         if (!showReleaseDate) {

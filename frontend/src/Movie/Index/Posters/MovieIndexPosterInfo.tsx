@@ -20,6 +20,7 @@ interface MovieIndexPosterInfoProps {
   added?: string;
   year: number;
   inCinemas?: string;
+  rippableRelease?: string;
   digitalRelease?: string;
   physicalRelease?: string;
   path: string;
@@ -48,6 +49,7 @@ function MovieIndexPosterInfo(props: MovieIndexPosterInfoProps) {
     added,
     year,
     inCinemas,
+    rippableRelease,
     digitalRelease,
     physicalRelease,
     path,
@@ -131,6 +133,24 @@ function MovieIndexPosterInfo(props: MovieIndexPosterInfoProps) {
     return (
       <div className={styles.info} title={translate('InCinemas')}>
         <Icon name={icons.IN_CINEMAS} /> {inCinemasDate}
+      </div>
+    );
+  }
+
+  if (sortKey === 'rippableRelease' && rippableRelease && !showReleaseDate) {
+    const rippableReleaseDate = getRelativeDate(
+      rippableRelease,
+      shortDateFormat,
+      showRelativeDates,
+      {
+        timeFormat,
+        timeForToday: false,
+      }
+    );
+
+    return (
+      <div className={styles.info}>
+        <Icon name={icons.MOVIE_FILE} /> {rippableReleaseDate}
       </div>
     );
   }

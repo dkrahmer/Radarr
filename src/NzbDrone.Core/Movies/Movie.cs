@@ -90,17 +90,9 @@ namespace NzbDrone.Core.Movies
             }
             else
             {
-                if (MovieMetadata.Value.PhysicalRelease.HasValue && MovieMetadata.Value.DigitalRelease.HasValue)
+                if (MovieMetadata.Value.RippableRelease.HasValue)
                 {
-                    minimumAvailabilityDate = new DateTime(Math.Min(MovieMetadata.Value.PhysicalRelease.Value.Ticks, MovieMetadata.Value.DigitalRelease.Value.Ticks));
-                }
-                else if (MovieMetadata.Value.PhysicalRelease.HasValue)
-                {
-                    minimumAvailabilityDate = MovieMetadata.Value.PhysicalRelease.Value;
-                }
-                else if (MovieMetadata.Value.DigitalRelease.HasValue)
-                {
-                    minimumAvailabilityDate = MovieMetadata.Value.DigitalRelease.Value;
+                    minimumAvailabilityDate = MovieMetadata.Value.RippableRelease.Value;
                 }
                 else
                 {

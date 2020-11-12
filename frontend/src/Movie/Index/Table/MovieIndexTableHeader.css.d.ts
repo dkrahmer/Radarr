@@ -17,6 +17,7 @@ interface CssExports {
   'physicalRelease': string;
   'popularity': string;
   'qualityProfileId': string;
+  'rippableRelease': string;
   'rottenTomatoesRating': string;
   'runtime': string;
   'sizeOnDisk': string;

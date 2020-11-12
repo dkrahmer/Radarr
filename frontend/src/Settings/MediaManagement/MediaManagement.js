@@ -74,7 +74,7 @@ const fileDateOptions = [
   {
     key: 'release',
     get value() {
-      return translate('PhysicalReleaseDate');
+      return translate('RippableReleaseDate');
     }
   }
 ];
