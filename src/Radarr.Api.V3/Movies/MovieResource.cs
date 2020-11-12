@@ -33,6 +33,7 @@ namespace Radarr.Api.V3.Movies
         public MovieStatusType Status { get; set; }
         public string Overview { get; set; }
         public DateTime? InCinemas { get; set; }
+        public DateTime? RippableRelease { get; set; }
         public DateTime? PhysicalRelease { get; set; }
         public DateTime? DigitalRelease { get; set; }
         public string PhysicalReleaseNote { get; set; }
@@ -93,6 +94,7 @@ namespace Radarr.Api.V3.Movies
                 OriginalTitle = model.OriginalTitle,
                 SortTitle = model.SortTitle,
                 InCinemas = model.InCinemas,
+                RippableRelease = model.RippableRelease,
                 PhysicalRelease = model.PhysicalRelease,
                 DigitalRelease = model.DigitalRelease,
                 HasFile = model.HasFile,
@@ -156,6 +158,7 @@ namespace Radarr.Api.V3.Movies
                 OriginalTitle = model.OriginalTitle,
                 SortTitle = translatedTitle.NormalizeTitle(),
                 InCinemas = model.InCinemas,
+                RippableRelease = model.RippableRelease,
                 PhysicalRelease = model.PhysicalRelease,
                 DigitalRelease = model.DigitalRelease,
                 HasFile = model.HasFile,
@@ -219,6 +222,7 @@ namespace Radarr.Api.V3.Movies
                 OriginalTitle = model.OriginalTitle,
                 SortTitle = translatedTitle.NormalizeTitle(),
                 InCinemas = model.InCinemas,
+                RippableRelease = model.RippableRelease,
                 PhysicalRelease = model.PhysicalRelease,
                 DigitalRelease = model.DigitalRelease,
                 HasFile = model.HasFile,
@@ -278,6 +282,7 @@ namespace Radarr.Api.V3.Movies
                 SortTitle = resource.SortTitle,
                 InCinemas = resource.InCinemas,
                 PhysicalRelease = resource.PhysicalRelease,
+                DigitalRelease = resource.DigitalRelease,
 
                 Overview = resource.Overview,
 

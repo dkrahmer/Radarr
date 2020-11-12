@@ -16,12 +16,16 @@ function Agenda(props) {
 
   items.forEach((item) => {
     const cinemaDateParsed = Date.parse(item.inCinemas);
+    const rippableDateParsed = Date.parse(item.rippableRelease);
     const digitalDateParsed = Date.parse(item.digitalRelease);
     const physicalDateParsed = Date.parse(item.physicalRelease);
     const dates = [];
 
     if (cinemaDateParsed > 0 && cinemaDateParsed >= startDateParsed && cinemaDateParsed <= endDateParsed) {
       dates.push(cinemaDateParsed);
+    }
+    if (rippableDateParsed > 0 && rippableDateParsed >= startDateParsed && rippableDateParsed <= endDateParsed) {
+      dates.push(rippableDateParsed);
     }
     if (digitalDateParsed > 0 && digitalDateParsed >= startDateParsed && digitalDateParsed <= endDateParsed) {
       dates.push(digitalDateParsed);
@@ -32,6 +36,7 @@ function Agenda(props) {
 
     item.sortDate = Math.min(...dates);
     item.cinemaDateParsed = cinemaDateParsed;
+    item.rippableDateParsed = rippableDateParsed;
     item.digitalDateParsed = digitalDateParsed;
     item.physicalDateParsed = physicalDateParsed;
   });

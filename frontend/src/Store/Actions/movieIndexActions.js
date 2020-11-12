@@ -80,6 +80,12 @@ export const defaultState = {
       isModifiable: false
     },
     {
+      name: 'year',
+      label: translate('Year'),
+      isSortable: true,
+      isVisible: true
+    },
+    {
       name: 'collection',
       label: translate('Collection'),
       isSortable: true,
@@ -89,13 +95,13 @@ export const defaultState = {
       name: 'studio',
       label: translate('Studio'),
       isSortable: true,
-      isVisible: true
+      isVisible: false
     },
     {
       name: 'qualityProfileId',
       label: translate('QualityProfile'),
       isSortable: true,
-      isVisible: true
+      isVisible: false
     },
     {
       name: 'added',
@@ -104,16 +110,16 @@ export const defaultState = {
       isVisible: false
     },
     {
-      name: 'year',
-      label: translate('Year'),
-      isSortable: true,
-      isVisible: false
-    },
-    {
       name: 'inCinemas',
       label: translate('InCinemas'),
       isSortable: true,
-      isVisible: false
+      isVisible: true
+    },
+    {
+      name: 'rippableRelease',
+      label: translate('RippableRelease'),
+      isSortable: true,
+      isVisible: true
     },
     {
       name: 'digitalRelease',
@@ -292,6 +298,12 @@ export const defaultState = {
     {
       name: 'inCinemas',
       label: translate('InCinemas'),
+      type: filterBuilderTypes.DATE,
+      valueType: filterBuilderValueTypes.DATE
+    },
+    {
+      name: 'rippableRelease',
+      label: translate('RippableRelease'),
       type: filterBuilderTypes.DATE,
       valueType: filterBuilderValueTypes.DATE
     },

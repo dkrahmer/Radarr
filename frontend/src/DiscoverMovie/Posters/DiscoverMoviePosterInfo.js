@@ -56,6 +56,24 @@ function DiscoverMoviePosterInfo(props) {
     );
   }
 
+  if (sortKey === 'rippableRelease' && rippableRelease) {
+    const rippableReleaseDate = getRelativeDate(
+      rippableRelease,
+      shortDateFormat,
+      showRelativeDates,
+      {
+        timeFormat,
+        timeForToday: false
+      }
+    );
+
+    return (
+      <div className={styles.info}>
+        {`Rippable ${rippableReleaseDate}`}
+      </div>
+    );
+  }
+
   if (sortKey === 'digitalRelease' && digitalRelease) {
     const digitalReleaseDate = getRelativeDate(
       digitalRelease,

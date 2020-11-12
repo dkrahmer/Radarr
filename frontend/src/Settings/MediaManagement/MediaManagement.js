@@ -30,7 +30,7 @@ const downloadPropersAndRepacksOptions = [
 const fileDateOptions = [
   { key: 'none', value: 'None' },
   { key: 'cinemas', value: 'In Cinemas Date' },
-  { key: 'release', value: 'Physical Release Date' }
+  { key: 'release', value: 'Rippable Release Date' }
 ];
 
 class MediaManagement extends Component {

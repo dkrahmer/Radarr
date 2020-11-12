@@ -113,6 +113,12 @@ export const defaultState = {
       isVisible: true
     },
     {
+      name: 'rippableRelease',
+      label: translate('RippableRelease'),
+      isSortable: true,
+      isVisible: true
+    },
+    {
       name: 'physicalRelease',
       label: translate('PhysicalRelease'),
       isSortable: true,
@@ -278,6 +284,12 @@ export const defaultState = {
     {
       name: 'inCinemas',
       label: 'In Cinemas',
+      type: filterBuilderTypes.DATE,
+      valueType: filterBuilderValueTypes.DATE
+    },
+    {
+      name: 'rippableRelease',
+      label: 'Rippable Release',
       type: filterBuilderTypes.DATE,
       valueType: filterBuilderValueTypes.DATE
     },

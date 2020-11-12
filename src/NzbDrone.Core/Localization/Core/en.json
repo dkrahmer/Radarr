@@ -631,6 +631,8 @@
   "Retention": "Retention",
   "RetentionHelpText": "Usenet only: Set to zero to set for unlimited retention",
   "RetryingDownloadInterp": "Retrying download {0} at {1}",
+  "Rippable": "Rippable",
+  "RippableRelease": "Rippable Release",
   "RootFolder": "Root Folder",
   "RootFolderCheckMultipleMessage": "Multiple root folders are missing: {0}",
   "RootFolderCheckSingleMessage": "Missing root folder: {0}",

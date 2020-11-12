@@ -12,6 +12,7 @@ function MovieIndexPosterInfo(props) {
     showQualityProfile,
     added,
     inCinemas,
+    rippableRelease,
     digitalRelease,
     physicalRelease,
     certification,
@@ -71,6 +72,24 @@ function MovieIndexPosterInfo(props) {
     return (
       <div className={styles.info}>
         {translate('InCinemas')}: {inCinemasDate}
+      </div>
+    );
+  }
+
+  if (sortKey === 'rippableRelease' && rippableRelease) {
+    const rippableReleaseDate = getRelativeDate(
+      rippableRelease,
+      shortDateFormat,
+      showRelativeDates,
+      {
+        timeFormat,
+        timeForToday: false
+      }
+    );
+
+    return (
+      <div className={styles.info}>
+        {translate('Rippable')}: {rippableReleaseDate}
       </div>
     );
   }
@@ -145,6 +164,7 @@ MovieIndexPosterInfo.propTypes = {
   added: PropTypes.string,
   inCinemas: PropTypes.string,
   certification: PropTypes.string,
+  rippableRelease: PropTypes.string,
   digitalRelease: PropTypes.string,
   physicalRelease: PropTypes.string,
   path: PropTypes.string.isRequired,

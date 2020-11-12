@@ -56,6 +56,15 @@ function DiscoverMovieSortMenu(props) {
         </SortMenuItem>
 
         <SortMenuItem
+          name="rippableRelease"
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onPress={onSortSelect}
+        >
+          Rippable Release
+        </SortMenuItem>
+
+        <SortMenuItem
           name="physicalRelease"
           sortKey={sortKey}
           sortDirection={sortDirection}

@@ -44,6 +44,7 @@ class AgendaEvent extends Component {
       genres,
       isAvailable,
       inCinemas,
+      rippableRelease,
       digitalRelease,
       physicalRelease,
       monitored,
@@ -56,6 +57,7 @@ class AgendaEvent extends Component {
       longDateFormat,
       colorImpairedMode,
       cinemaDateParsed,
+      rippableDateParsed,
       digitalDateParsed,
       physicalDateParsed,
       sortDate
@@ -63,6 +65,11 @@ class AgendaEvent extends Component {
 
     let startTime = null;
     let releaseIcon = null;
+
+    if (rippableDateParsed === sortDate) {
+      startTime = rippableRelease;
+      releaseIcon = icons.MOVIE_FILE;
+    }
 
     if (physicalDateParsed === sortDate) {
       startTime = physicalRelease;
@@ -168,6 +175,7 @@ AgendaEvent.propTypes = {
   genres: PropTypes.arrayOf(PropTypes.string).isRequired,
   isAvailable: PropTypes.bool.isRequired,
   inCinemas: PropTypes.string,
+  rippableRelease: PropTypes.string,
   digitalRelease: PropTypes.string,
   physicalRelease: PropTypes.string,
   monitored: PropTypes.bool.isRequired,
@@ -181,6 +189,7 @@ AgendaEvent.propTypes = {
   longDateFormat: PropTypes.string.isRequired,
   colorImpairedMode: PropTypes.bool.isRequired,
   cinemaDateParsed: PropTypes.number,
+  rippableDateParsed: PropTypes.number,
   digitalDateParsed: PropTypes.number,
   physicalDateParsed: PropTypes.number,
   sortDate: PropTypes.number

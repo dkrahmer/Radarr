@@ -50,6 +50,21 @@ namespace NzbDrone.Core.Movies
         public string RootFolderPath { get; set; }
         public DateTime Added { get; set; }
         public DateTime? InCinemas { get; set; }
+        public DateTime? RippableRelease
+        {
+            get
+            {
+                if (PhysicalRelease.HasValue && DigitalRelease.HasValue)
+                {
+                    return new DateTime(Math.Min(PhysicalRelease.Value.Ticks, DigitalRelease.Value.Ticks));
+                }
+                else
+                {
+                    return PhysicalRelease ?? DigitalRelease;
+                }
+            }
+        }
+
         public DateTime? PhysicalRelease { get; set; }
         public DateTime? DigitalRelease { get; set; }
         public Profile Profile { get; set; }
@@ -73,9 +88,9 @@ namespace NzbDrone.Core.Movies
         {
             get
             {
-                if (PhysicalRelease.HasValue)
+                if (RippableRelease.HasValue)
                 {
-                    return PhysicalRelease.Value >= DateTime.UtcNow.AddDays(-21);
+                    return RippableRelease.Value >= DateTime.UtcNow.AddDays(-21);
                 }
 
                 if (InCinemas.HasValue)
@@ -119,17 +134,9 @@ namespace NzbDrone.Core.Movies
             }
             else
             {
-                if (PhysicalRelease.HasValue && DigitalRelease.HasValue)
+                if (RippableRelease.HasValue)
                 {
-                    minimumAvailabilityDate = new DateTime(Math.Min(PhysicalRelease.Value.Ticks, DigitalRelease.Value.Ticks));
-                }
-                else if (PhysicalRelease.HasValue)
-                {
-                    minimumAvailabilityDate = PhysicalRelease.Value;
-                }
-                else if (DigitalRelease.HasValue)
-                {
-                    minimumAvailabilityDate = DigitalRelease.Value;
+                    minimumAvailabilityDate = RippableRelease.Value;
                 }
                 else
                 {
@@ -150,9 +157,9 @@ namespace NzbDrone.Core.Movies
             return DateTime.Now >= minimumAvailabilityDate.AddDays((double)delay);
         }
 
-        public DateTime PhysicalReleaseDate()
+        public DateTime RippableReleaseDate()
         {
-            return PhysicalRelease ?? (InCinemas?.AddDays(90) ?? DateTime.MaxValue);
+            return RippableRelease ?? (InCinemas?.AddDays(90) ?? DateTime.MaxValue);
         }
 
         public override string ToString()
