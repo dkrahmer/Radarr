@@ -191,6 +191,7 @@ namespace NzbDrone.Core.MediaFiles
 
             var videoFiles = _diskScanService.FilterPaths(directoryInfo.FullName, _diskScanService.GetVideoFiles(directoryInfo.FullName));
 
+            /*
             if (downloadClientItem == null)
             {
                 foreach (var videoFile in videoFiles)
@@ -204,6 +205,7 @@ namespace NzbDrone.Core.MediaFiles
                     }
                 }
             }
+            */
 
             var decisions = _importDecisionMaker.GetImportDecisions(videoFiles.ToList(), movie, downloadClientItem, folderInfo, true);
             var importResults = _importApprovedMovie.Import(decisions, true, downloadClientItem, importMode);
@@ -253,6 +255,7 @@ namespace NzbDrone.Core.MediaFiles
                        };
             }
 
+            /*
             if (downloadClientItem == null)
             {
                 if (_diskProvider.IsFileLocked(fileInfo.FullName))
@@ -263,6 +266,7 @@ namespace NzbDrone.Core.MediaFiles
                            };
                 }
             }
+            */
 
             var decisions = _importDecisionMaker.GetImportDecisions(new List<string>() { fileInfo.FullName }, movie, downloadClientItem, null, true);
 
