@@ -146,7 +146,7 @@ function DownloadClientOptions(props) {
                       unit="minutes"
                       helpText={translate('DroneFactoryIntervalHelpText')}
                       onChange={onInputChange}
-                      {...settings.checkForFinishedDownloadInterval}
+                      {...settings.downloadedMoviesScanInterval}
                     />
                   </FormGroup>
               </Form>
