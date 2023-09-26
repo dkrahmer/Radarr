@@ -45,6 +45,9 @@ const mapDispatchToProps = {
 };
 
 class AddNewMovieModalContentConnector extends Component {
+  componentWillMount() {
+    this.props.setAddMovieDefault({ searchForMovie: true });
+  }
 
   //
   // Listeners
