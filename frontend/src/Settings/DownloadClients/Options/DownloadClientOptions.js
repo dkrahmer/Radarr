@@ -96,6 +96,37 @@ function DownloadClientOptions(props) {
                 {translate('RemoveDownloadsAlert')}
               </Alert>
             </FieldSet>
+
+            <FieldSet legend={translate('DroneFactoryOptions')}>
+              <Form>
+                <FormGroup size={sizes.MEDIUM}>
+                  <FormLabel>{translate('DroneFactoryDirectory')}</FormLabel>
+
+                  <FormInputGroup
+                    type={inputTypes.PATH}
+                    name="downloadedMoviesFolder"
+                    helpText={translate('DroneFactoryDirectoryHelpText')}
+                    onChange={onInputChange}
+                    {...settings.downloadedMoviesFolder}
+                  />
+                </FormGroup>
+
+                <FormGroup size={sizes.MEDIUM}>
+                  <FormLabel>{translate('DroneFactoryInterval')}</FormLabel>
+
+                  <FormInputGroup
+                    type={inputTypes.NUMBER}
+                    name="downloadedMoviesScanInterval"
+                    min={0}
+                    max={120}
+                    unit="minutes"
+                    helpText={translate('DroneFactoryIntervalHelpText')}
+                    onChange={onInputChange}
+                    {...settings.downloadedMoviesScanInterval}
+                  />
+                </FormGroup>
+              </Form>
+            </FieldSet>
           </div>
       }
     </div>

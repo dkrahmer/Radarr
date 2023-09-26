@@ -1,10 +1,11 @@
-using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Download.TrackedDownloads;
 using NzbDrone.Core.MediaFiles.Commands;
@@ -20,11 +21,13 @@ namespace NzbDrone.Core.MediaFiles
         private readonly IDiskProvider _diskProvider;
         private readonly ICompletedDownloadService _completedDownloadService;
         private readonly ICommandResultReporter _commandResultReporter;
+        private readonly IConfigService _configService;
         private readonly Logger _logger;
 
         public DownloadedMovieCommandService(IDownloadedMovieImportService downloadedMovieImportService,
                                                 ITrackedDownloadService trackedDownloadService,
                                                 IDiskProvider diskProvider,
+                                                IConfigService configService,
                                                 ICompletedDownloadService completedDownloadService,
                                                 ICommandResultReporter commandResultReporter,
                                                 Logger logger)
@@ -34,7 +37,27 @@ namespace NzbDrone.Core.MediaFiles
             _diskProvider = diskProvider;
             _completedDownloadService = completedDownloadService;
             _commandResultReporter = commandResultReporter;
+            _configService = configService;
             _logger = logger;
+        }
+
+        private List<ImportResult> ProcessDroneFactoryFolder()
+        {
+            var downloadedMoviesFolder = _configService.DownloadedMoviesFolder;
+
+            if (string.IsNullOrEmpty(downloadedMoviesFolder))
+            {
+                _logger.Trace("Drone Factory folder is not configured");
+                return new List<ImportResult>();
+            }
+
+            if (!_diskProvider.FolderExists(downloadedMoviesFolder))
+            {
+                _logger.Warn("Drone Factory folder [{0}] doesn't exist.", downloadedMoviesFolder);
+                return new List<ImportResult>();
+            }
+
+            return _downloadedMovieImportService.ProcessRootFolder(new DirectoryInfo(downloadedMoviesFolder));
         }
 
         private List<ImportResult> ProcessPath(DownloadedMoviesScanCommand message)
@@ -69,6 +92,7 @@ namespace NzbDrone.Core.MediaFiles
         public void Execute(DownloadedMoviesScanCommand message)
         {
             List<ImportResult> importResults;
+            var isDroneImport = false;
 
             if (message.Path.IsNotNullOrWhiteSpace())
             {
@@ -76,15 +100,24 @@ namespace NzbDrone.Core.MediaFiles
             }
             else
             {
-                throw new ArgumentException("A path must be provided", "path");
+                importResults = ProcessDroneFactoryFolder();
+                isDroneImport = true;
             }
 
             if (importResults == null || importResults.All(v => v.Result != ImportResultType.Imported))
             {
-                // Allow the command to complete successfully, but report as unsuccessful
+                if (isDroneImport)
+                {
+                    // Atm we don't report it as a command failure, coz that would cause the download to be failed.
+                    _logger.ProgressDebug("Drone Factory did not find anything to import");
+                }
+                else
+                {
+                    // Allow the command to complete successfully, but report as unsuccessful
 
-                _logger.ProgressDebug("Failed to import");
-                _commandResultReporter.Report(CommandResult.Unsuccessful);
+                    _logger.ProgressDebug("Failed to import");
+                    _commandResultReporter.Report(CommandResult.Unsuccessful);
+                }
             }
         }
     }

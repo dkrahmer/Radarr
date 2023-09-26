@@ -109,6 +109,12 @@ namespace NzbDrone.Core.Jobs
 
                     new ScheduledTask
                     {
+                        Interval = GetDownloadedMoviesScanInterval(),
+                        TypeName = typeof(DownloadedMoviesScanCommand).FullName
+                    },
+
+                    new ScheduledTask
+                    {
                         Interval = GetBackupInterval(),
                         TypeName = typeof(BackupCommand).FullName
                     },
@@ -198,8 +204,25 @@ namespace NzbDrone.Core.Jobs
             return interval;
         }
 
+        private int GetDownloadedMoviesScanInterval()
+        {
+            var interval = _configService.DownloadedMoviesScanInterval;
+
+            if (interval < 0)
+            {
+                return 0;
+            }
+
+            return interval;
+        }
+
         private int GetRefreshMonitoredInterval()
         {
+            if (!_configService.EnableCompletedDownloadHandling)
+            {
+                return 0;
+            }
+
             var interval = _configService.CheckForFinishedDownloadInterval;
 
             if (interval < 1)
@@ -237,11 +260,15 @@ namespace NzbDrone.Core.Jobs
             var refreshMonitoredDownloads = _scheduledTaskRepository.GetDefinition(typeof(RefreshMonitoredDownloadsCommand));
             refreshMonitoredDownloads.Interval = GetRefreshMonitoredInterval();
 
-            _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { rss, refreshMonitoredDownloads, backup });
+            var downloadedMoviesScan = _scheduledTaskRepository.GetDefinition(typeof(DownloadedMoviesScanCommand));
+            downloadedMoviesScan.Interval = GetDownloadedMoviesScanInterval();
+
+            _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { rss, refreshMonitoredDownloads, downloadedMoviesScan, backup });
 
             _cache.Find(rss.TypeName).Interval = rss.Interval;
             _cache.Find(backup.TypeName).Interval = backup.Interval;
             _cache.Find(refreshMonitoredDownloads.TypeName).Interval = refreshMonitoredDownloads.Interval;
+            _cache.Find(downloadedMoviesScan.TypeName).Interval = downloadedMoviesScan.Interval;
         }
     }
 }
