@@ -201,8 +201,7 @@ namespace NzbDrone.Core.MediaFiles
             }
 
             var videoFiles = _diskScanService.FilterPaths(directoryInfo.FullName, _diskScanService.GetVideoFiles(directoryInfo.FullName));
-
-            if (downloadClientItem == null)
+            if (downloadClientItem == null && OsInfo.IsWindows)
             {
                 foreach (var videoFile in videoFiles)
                 {
@@ -290,7 +289,7 @@ namespace NzbDrone.Core.MediaFiles
                        };
             }
 
-            if (downloadClientItem == null)
+            if (downloadClientItem == null && OsInfo.IsWindows)
             {
                 if (_diskProvider.IsFileLocked(fileInfo.FullName))
                 {
