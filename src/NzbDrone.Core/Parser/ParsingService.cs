@@ -45,6 +45,17 @@ namespace NzbDrone.Core.Parser
 
             if (result == null)
             {
+                var localMovie = new LocalMovie() { Path = path };
+                if (localMovie.IsImmutableSubdirectory)
+                {
+                    var baseDirectoryName = fileInfo.Directory.Parent.Name;
+                    _logger.Debug($"Found immutable directory {0}. Attempting to parse minimal movie info using base directory name. {1}", localMovie.SubdirectoryName, baseDirectoryName);
+                    result = Parser.ParseMovieTitle(baseDirectoryName);
+                }
+            }
+
+            if (result == null)
+            {
                 _logger.Debug("Attempting to parse movie info using directory and file names. {0}", fileInfo.Directory.Name);
                 result = Parser.ParseMovieTitle(fileInfo.Directory.Name + " " + fileInfo.Name);
             }
