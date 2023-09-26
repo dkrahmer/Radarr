@@ -73,7 +73,7 @@ namespace NzbDrone.Core.Jobs
 
                     new ScheduledTask
                     {
-                        Interval = 6 * 60,
+                        Interval = 0 * 6 * 60, // DK: Interval set to 0 to disable. Can be run from the web GUI.
                         TypeName = typeof(ApplicationCheckUpdateCommand).FullName
                     },
 
@@ -85,7 +85,7 @@ namespace NzbDrone.Core.Jobs
 
                     new ScheduledTask
                     {
-                        Interval = 24 * 60,
+                        Interval = 0 * 24 * 60, // DK: Interval set to 0 to disable. Can be run from the API or web GUI.
                         TypeName = typeof(RefreshMovieCommand).FullName
                     },
 
