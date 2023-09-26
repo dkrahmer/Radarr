@@ -270,7 +270,9 @@ namespace NzbDrone.Core.Movies
             else
             {
                 // TODO refresh all moviemetadata here, even if not used by a Movie
-                var allMovie = _movieService.GetAllMovies().OrderBy(c => c.MovieMetadata.Value.SortTitle).ToList();
+                var allMovie = _movieService.GetAllMovies()
+                                            .Where(m => m.Monitored) // only refresh monitored movies
+                                            .OrderBy(c => c.MovieMetadata.Value.SortTitle).ToList();
 
                 var updatedTMDBMovies = new HashSet<int>();
 
