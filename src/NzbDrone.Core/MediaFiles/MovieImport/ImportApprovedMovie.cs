@@ -66,6 +66,7 @@ namespace NzbDrone.Core.MediaFiles.MovieImport
                 .ToList();
 
             var importResults = new List<ImportResult>();
+            var allowImportMovie = true;
 
             foreach (var importDecision in qualifiedImports.OrderByDescending(e => e.LocalMovie.Size))
             {
@@ -78,8 +79,16 @@ namespace NzbDrone.Core.MediaFiles.MovieImport
                     if (importResults.Select(r => r.ImportDecision.LocalMovie.Movie)
                                          .Select(m => m.Id).Contains(localMovie.Movie.Id))
                     {
-                        importResults.Add(new ImportResult(importDecision, "Movie has already been imported"));
-                        continue;
+                        if (!localMovie.IsImmutableSubdirectory)
+                        {
+                            importResults.Add(new ImportResult(importDecision, "Movie has already been imported"));
+                            continue;
+                        }
+                        else
+                        {
+                            // For immutable subdirectories: Process all files but only import the first video file.
+                            allowImportMovie = false;
+                        }
                     }
 
                     var movieFile = new MovieFile();
@@ -135,16 +144,19 @@ namespace NzbDrone.Core.MediaFiles.MovieImport
                         // Delete existing files from the DB mapped to this path
                         var previousFiles = _mediaFileService.GetFilesWithRelativePath(localMovie.Movie.Id, movieFile.RelativePath);
 
-                        foreach (var previousFile in previousFiles)
+                        if (previousFiles != null)
                         {
-                            _mediaFileService.Delete(previousFile, DeleteMediaFileReason.ManualOverride);
+                            foreach (var previousFile in previousFiles)
+                            {
+                                _mediaFileService.Delete(previousFile, DeleteMediaFileReason.ManualOverride);
+                            }
                         }
                     }
 
                     movieFile = _mediaFileService.Add(movieFile);
                     importResults.Add(new ImportResult(importDecision));
 
-                    if (newDownload)
+                    if (newDownload && allowImportMovie)
                     {
                         _extraService.ImportMovie(localMovie, movieFile, copyOnly);
                     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DryIoc.ImTools;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Core.Configuration;
@@ -50,6 +51,18 @@ namespace NzbDrone.Core.Extras
         {
             ImportExtraFiles(localMovie, movieFile, isReadOnly);
 
+            if (localMovie.IsImmutableSubdirectory)
+            {
+                var newMovieFile = (MovieFile)movieFile.Clone();
+                var baseDirectoryName = newMovieFile.OriginalFilePath.Split(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar })[0];
+                var filenamePlaceholder = baseDirectoryName + ".placeholder";
+                newMovieFile.RelativePath = filenamePlaceholder;
+                newMovieFile.OriginalFilePath = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(newMovieFile.OriginalFilePath)), filenamePlaceholder);
+                newMovieFile.Path = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(newMovieFile.Path)), filenamePlaceholder);
+
+                movieFile = newMovieFile;
+            }
+
             CreateAfterMovieImport(localMovie.Movie, movieFile);
         }
 
@@ -67,7 +80,13 @@ namespace NzbDrone.Core.Extras
                                                                      .Insert(0, "."))
                                                                      .ToList();
 
-            var sourceFolder = _diskProvider.GetParentFolder(localMovie.Path);
+            var sourcePath = localMovie.Path;
+            if (localMovie.IsImmutableSubdirectory)
+            {
+                sourcePath = Path.GetDirectoryName(sourcePath);
+            }
+
+            var sourceFolder = _diskProvider.GetParentFolder(sourcePath);
             var files = _diskProvider.GetFiles(sourceFolder, folderSearchOption);
             var managedFiles = _extraFileManagers.Select((i) => new List<string>()).ToArray();
 

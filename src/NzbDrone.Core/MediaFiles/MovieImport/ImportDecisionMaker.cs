@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NLog;
 using NzbDrone.Common.Disk;
@@ -115,9 +116,19 @@ namespace NzbDrone.Core.MediaFiles.MovieImport
 
         private ImportDecision GetDecision(LocalMovie localMovie, DownloadClientItem downloadClientItem, bool otherFiles)
         {
-            ImportDecision decision = null;
+            ParsedMovieInfo fileMovieInfo;
 
-            var fileMovieInfo = Parser.Parser.ParseMoviePath(localMovie.Path);
+            if (localMovie.IsImmutableSubdirectory)
+            {
+                // Use the containing directory name as the movie title for DVD directories
+                fileMovieInfo = Parser.Parser.ParseMovieTitle($"{new FileInfo(localMovie.Path).Directory.Parent.Name}.directory");
+            }
+            else
+            {
+                fileMovieInfo = Parser.Parser.ParseMoviePath(localMovie.Path);
+            }
+
+            ImportDecision decision = null;
 
             localMovie.FileMovieInfo = fileMovieInfo;
             localMovie.Size = _diskProvider.GetFileSize(localMovie.Path);
@@ -129,6 +140,10 @@ namespace NzbDrone.Core.MediaFiles.MovieImport
                 if (localMovie.Movie == null)
                 {
                     decision = new ImportDecision(localMovie, new Rejection("Invalid movie"));
+                }
+                else if (localMovie.IsImmutableSubdirectory && fileMovieInfo != null)
+                {
+                    decision = new ImportDecision(localMovie);
                 }
                 else
                 {

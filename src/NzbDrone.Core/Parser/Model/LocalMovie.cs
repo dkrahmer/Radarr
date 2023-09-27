@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Languages;
@@ -11,12 +13,74 @@ namespace NzbDrone.Core.Parser.Model
 {
     public class LocalMovie
     {
+        public static readonly string[] ImmutableSubdirectories = new string[] { "VIDEO_TS" };
+
         public LocalMovie()
         {
             CustomFormats = new List<CustomFormat>();
         }
 
-        public string Path { get; set; }
+        private string _path;
+        public string Path
+        {
+            get
+            {
+                return _path;
+            }
+            set
+            {
+                SubdirectoryName = null;
+                _path = value;
+            }
+        }
+
+        private bool? _isImmutableSubdirectory;
+        public bool IsImmutableSubdirectory
+        {
+            get
+            {
+                if (!_isImmutableSubdirectory.HasValue)
+                {
+                    if (string.IsNullOrEmpty(SubdirectoryName))
+                    {
+                        _isImmutableSubdirectory = false;
+                    }
+                    else
+                    {
+                        _isImmutableSubdirectory = ImmutableSubdirectories.Contains(SubdirectoryName, StringComparer.OrdinalIgnoreCase);
+                    }
+                }
+
+                return _isImmutableSubdirectory.Value;
+            }
+        }
+
+        private string _subdirectoryName;
+        public string SubdirectoryName
+        {
+            get
+            {
+                if (_subdirectoryName == null)
+                {
+                    if (string.IsNullOrEmpty(_path))
+                    {
+                        SubdirectoryName = _path;
+                    }
+                    else
+                    {
+                        _subdirectoryName = System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(_path));
+                    }
+                }
+
+                return _subdirectoryName;
+            }
+            private set
+            {
+                _isImmutableSubdirectory = null;
+                _subdirectoryName = value;
+            }
+        }
+
         public long Size { get; set; }
         public ParsedMovieInfo FileMovieInfo { get; set; }
         public ParsedMovieInfo DownloadClientMovieInfo { get; set; }
