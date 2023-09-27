@@ -64,6 +64,8 @@ namespace NzbDrone.Core.ImportLists
             foreach (var importList in importLists)
             {
                 var importListLocal = importList;
+
+                /* Fix List sync interval logic to allow manual list refreshes - DK - Broken from PR #8573
                 var importListStatus = _importListStatusService.GetLastSyncListInfo(importListLocal.Definition.Id);
 
                 if (importListStatus.HasValue)
@@ -77,6 +79,7 @@ namespace NzbDrone.Core.ImportLists
                         continue;
                     }
                 }
+                */
 
                 _logger.ProgressInfo("Syncing Movies for Import List {0} ({1})", importList.Name, importListLocal.Definition.Name);
 

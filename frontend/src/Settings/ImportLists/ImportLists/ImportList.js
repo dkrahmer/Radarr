@@ -4,7 +4,6 @@ import Card from 'Components/Card';
 import Label from 'Components/Label';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
 import { kinds } from 'Helpers/Props';
-import formatShortTimeSpan from 'Utilities/Date/formatShortTimeSpan';
 import translate from 'Utilities/String/translate';
 import EditImportListModalConnector from './EditImportListModalConnector';
 import styles from './ImportList.css';
@@ -57,8 +56,7 @@ class ImportList extends Component {
       id,
       name,
       enabled,
-      enableAuto,
-      minRefreshInterval
+      enableAuto
     } = this.props;
 
     return (
@@ -98,12 +96,6 @@ class ImportList extends Component {
           }
         </div>
 
-        <div className={styles.enabled}>
-          <Label kind={kinds.INFO} title='List Refresh Interval'>
-            {`${translate('Refresh')}: ${formatShortTimeSpan(minRefreshInterval)}`}
-          </Label>
-        </div>
-
         <EditImportListModalConnector
           id={id}
           isOpen={this.state.isEditImportListModalOpen}
@@ -130,7 +122,6 @@ ImportList.propTypes = {
   name: PropTypes.string.isRequired,
   enabled: PropTypes.bool.isRequired,
   enableAuto: PropTypes.bool.isRequired,
-  minRefreshInterval: PropTypes.string.isRequired,
   onConfirmDeleteImportList: PropTypes.func.isRequired
 };
 

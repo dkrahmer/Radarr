@@ -14,7 +14,6 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds } from 'Helpers/Props';
-import formatShortTimeSpan from 'Utilities/Date/formatShortTimeSpan';
 import translate from 'Utilities/String/translate';
 import styles from './EditImportListModalContent.css';
 
@@ -43,7 +42,6 @@ function EditImportListModalContent(props) {
     name,
     enabled,
     enableAuto,
-    minRefreshInterval,
     monitor,
     minimumAvailability,
     qualityProfileId,
@@ -87,13 +85,6 @@ function EditImportListModalContent(props) {
                     {message.value.message}
                   </Alert>
               }
-
-              <Alert
-                kind={kinds.INFO}
-                className={styles.message}
-              >
-                {translate('ListWillRefreshEveryInterp', [formatShortTimeSpan(minRefreshInterval.value)])}
-              </Alert>
 
               <FormGroup>
                 <FormLabel>{translate('Name')}</FormLabel>

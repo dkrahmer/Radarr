@@ -127,7 +127,7 @@ namespace NzbDrone.Core.Jobs
 
                     new ScheduledTask
                     {
-                        Interval = 5,
+                        Interval = GetImportListSyncInterval(),
                         TypeName = typeof(ImportListSyncCommand).FullName
                     },
 
@@ -233,6 +233,23 @@ namespace NzbDrone.Core.Jobs
             return interval;
         }
 
+        private int GetImportListSyncInterval()
+        {
+            var interval = _configService.ImportListSyncInterval;
+
+            if (interval <= 0)
+            {
+                return 0;
+            }
+
+            if (interval < 60)
+            {
+                return 60;
+            }
+
+            return interval;
+        }
+
         public void Handle(CommandExecutedEvent message)
         {
             var scheduledTask = _scheduledTaskRepository.All().SingleOrDefault(c => c.TypeName == message.Command.Body.GetType().FullName);
@@ -254,6 +271,9 @@ namespace NzbDrone.Core.Jobs
             var rss = _scheduledTaskRepository.GetDefinition(typeof(RssSyncCommand));
             rss.Interval = GetRssSyncInterval();
 
+            var importList = _scheduledTaskRepository.GetDefinition(typeof(ImportListSyncCommand));
+            importList.Interval = GetImportListSyncInterval();
+
             var backup = _scheduledTaskRepository.GetDefinition(typeof(BackupCommand));
             backup.Interval = GetBackupInterval();
 
@@ -263,9 +283,10 @@ namespace NzbDrone.Core.Jobs
             var downloadedMoviesScan = _scheduledTaskRepository.GetDefinition(typeof(DownloadedMoviesScanCommand));
             downloadedMoviesScan.Interval = GetDownloadedMoviesScanInterval();
 
-            _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { rss, refreshMonitoredDownloads, downloadedMoviesScan, backup });
+            _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { rss, importList, refreshMonitoredDownloads, downloadedMoviesScan, backup });
 
             _cache.Find(rss.TypeName).Interval = rss.Interval;
+            _cache.Find(importList.TypeName).Interval = importList.Interval;
             _cache.Find(backup.TypeName).Interval = backup.Interval;
             _cache.Find(refreshMonitoredDownloads.TypeName).Interval = refreshMonitoredDownloads.Interval;
             _cache.Find(downloadedMoviesScan.TypeName).Interval = downloadedMoviesScan.Interval;

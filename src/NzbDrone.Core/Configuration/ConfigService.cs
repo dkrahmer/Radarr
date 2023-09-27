@@ -116,6 +116,15 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("AvailabilityDelay", value); }
         }
 
+        public int ImportListSyncInterval
+        {
+            get { return 4 * 60; } // Use hardcoded minutes value since the column was removed from the DB in PR #8573
+            set { }
+
+            // get { return GetValueInt("ImportListSyncInterval", 6); }
+            // set { SetValue("ImportListSyncInterval", value); }
+        }
+
         public string ListSyncLevel
         {
             get { return GetValue("ListSyncLevel", "disabled"); }

@@ -46,6 +46,25 @@ function ImportListOptions(props) {
         {
           hasSettings && !isFetching && !error &&
             <Form>
+              {/*
+              <FormGroup
+                advancedSettings={advancedSettings}
+                isAdvanced={true}
+              >
+                <FormLabel>{translate('ListUpdateInterval')}</FormLabel>
+
+                <FormInputGroup
+                  type={inputTypes.NUMBER}
+                  name="importListSyncInterval"
+                  min={10}
+                  unit="minutes"
+                  helpText={translate('ImportListSyncIntervalHelpText')}
+                  onChange={onInputChange}
+                  {...settings.importListSyncInterval}
+                />
+              </FormGroup>
+              */}
+
               <FormGroup
                 advancedSettings={advancedSettings}
                 isAdvanced={true}
