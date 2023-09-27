@@ -265,7 +265,7 @@ export const defaultState = {
     },
     {
       name: 'studio',
-      label: 'Studio',
+      label: () => translate('Studio'),
       type: filterBuilderTypes.ARRAY,
       optionsSelector: function(items) {
         const tagList = items.reduce((acc, movie) => {
@@ -332,13 +332,13 @@ export const defaultState = {
     },
     {
       name: 'physicalRelease',
-      label: 'Physical Release',
+      label: () => translate('PhysicalRelease'),
       type: filterBuilderTypes.DATE,
       valueType: filterBuilderValueTypes.DATE
     },
     {
       name: 'digitalRelease',
-      label: 'Digital Release',
+      label: () => translate('DigitalRelease'),
       type: filterBuilderTypes.DATE,
       valueType: filterBuilderValueTypes.DATE
     },
@@ -349,7 +349,7 @@ export const defaultState = {
     },
     {
       name: 'genres',
-      label: 'Genres',
+      label: () => translate('Genres'),
       type: filterBuilderTypes.ARRAY,
       optionsSelector: function(items) {
         const tagList = items.reduce((acc, movie) => {
@@ -405,30 +405,30 @@ export const defaultState = {
     },
     {
       name: 'certification',
-      label: 'Certification',
+      label: () => translate('Certification'),
       type: filterBuilderTypes.EXACT
     },
     {
       name: 'lists',
-      label: 'Lists',
+      label: () => translate('Lists'),
       type: filterBuilderTypes.ARRAY,
       valueType: filterBuilderValueTypes.IMPORTLIST
     },
     {
       name: 'isExcluded',
-      label: 'On Excluded List',
+      label: () => translate('Popularity'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.BOOL
     },
     {
       name: 'isExisting',
-      label: 'Exists in Library',
+      label: () => translate('Popularity'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.BOOL
     },
     {
       name: 'isRecommendation',
-      label: 'Recommended',
+      label: () => translate('Popularity'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.BOOL
     }
