@@ -218,11 +218,6 @@ namespace NzbDrone.Core.Jobs
 
         private int GetRefreshMonitoredInterval()
         {
-            if (!_configService.EnableCompletedDownloadHandling)
-            {
-                return 0;
-            }
-
             var interval = _configService.CheckForFinishedDownloadInterval;
 
             if (interval < 1)
