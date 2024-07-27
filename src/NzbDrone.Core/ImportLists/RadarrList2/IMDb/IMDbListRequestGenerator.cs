@@ -1,4 +1,3 @@
-using System;
 using NzbDrone.Common.Http;
 
 namespace NzbDrone.Core.ImportLists.RadarrList2.IMDbList
@@ -9,12 +8,18 @@ namespace NzbDrone.Core.ImportLists.RadarrList2.IMDbList
 
         protected override HttpRequest GetHttpRequest()
         {
-            // Use IMDb list Export for user lists to bypass RadarrAPI caching
-            if (Settings.ListId.StartsWith("ls", StringComparison.OrdinalIgnoreCase))
+            var imdbPath = Settings.ListId.StartsWith("ur") ?
+                $"user/{Settings.ListId}/watchlist"
+                : Settings.ListId.StartsWith("ls") ?
+                $"list/{Settings.ListId}"
+                : null;
+
+            if (imdbPath != null)
             {
-                return new HttpRequest($"https://www.imdb.com/list/{Settings.ListId}/export", new HttpAccept("*/*"));
+                return new HttpRequest($"https://www.imdb.com/{imdbPath}/?sort=date_added%2Cdesc", new HttpAccept("*/*"));
             }
 
+            // This is a preset list provided by Radarr cloud
             return RequestBuilder.Create()
                 .SetSegment("route", $"list/imdb/{Settings.ListId}")
                 .Accept(HttpAccept.Json)
