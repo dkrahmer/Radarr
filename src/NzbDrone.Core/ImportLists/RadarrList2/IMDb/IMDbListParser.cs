@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.ImportLists.ImportListMovies;
 using NzbDrone.Core.MetadataSource.SkyHook.Resource;
@@ -20,35 +19,67 @@ namespace NzbDrone.Core.ImportLists.RadarrList2.IMDbList
 
         public override IList<ImportListMovie> ParseResponse(ImportListResponse importListResponse)
         {
-            var importResponse = importListResponse;
+            var importListMovies = new List<ImportListMovie>();
 
-            var movies = new List<ImportListMovie>();
-
-            if (!PreProcess(importResponse))
+            if (!PreProcess(importListResponse))
             {
-                return movies;
+                return importListMovies;
             }
 
-            if (_settings.ListId.StartsWith("ls", StringComparison.OrdinalIgnoreCase))
+            if (importListResponse.HttpRequest.Url.Host.Contains("api.radarr.video"))
             {
-                // Parse TSV response from IMDB export
-                var rows = importResponse.Content.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-                movies = rows.Skip(1).SelectList(m => m.Split(',')).Where(m => m.Length > 1).SelectList(i => new ImportListMovie { ImdbId = i[1] });
-
-                return movies;
-            }
-            else
-            {
-                var jsonResponse = JsonConvert.DeserializeObject<List<MovieResource>>(importResponse.Content);
+                // Handle the preset list provided by Radarr cloud
+                var jsonResponse = JsonConvert.DeserializeObject<List<MovieResource>>(importListResponse.Content);
 
                 if (jsonResponse == null)
                 {
-                    return movies;
+                    return importListMovies;
                 }
 
                 return jsonResponse.SelectList(m => new ImportListMovie { TmdbId = m.TmdbId });
             }
+
+
+            var isUserList = importListResponse.HttpRequest.Url.Path.StartsWith("/user/");
+
+            var html = importListResponse.Content;
+            var i = html.IndexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">");
+            var k = html.IndexOf(">", i);
+            var j = html.IndexOf("</script", k);
+            var jx = html.Substring(k + 1, j - k - 1);
+
+            var jxr = jx.Replace("/", "~").Replace("\\x", "#x#"); // Adjust any JSON escape chars
+            var jsdata = JObject.Parse(jxr);
+
+            var listName = isUserList ? "predefinedList" : "list"; // different node user list
+            var listItemEdges = jsdata.SelectToken($"props.pageProps.mainColumnData.{listName}.titleListItemSearch.edges") as JArray;
+
+            if (listItemEdges == null)
+            {
+                return importListMovies; // could not find edges
+            }
+
+            foreach (var listItemEdge in listItemEdges)
+            {
+                var listItem = listItemEdge.SelectToken("listItem");
+
+                var type = listItem.SelectToken("titleType.id")?.ToString();
+                if (!(type?.ToLower().Contains("movie") ?? false))
+                    continue;  // only allow movies - "movie", "tvMovie"
+
+                var imdbId = listItem.SelectToken("id")?.ToString();
+                if (string.IsNullOrWhiteSpace(imdbId))
+                    continue;
+
+                var importListMovie = new ImportListMovie
+                {
+                    ImdbId = imdbId
+                };
+
+                importListMovies.Add(importListMovie);
+            }
+
+            return importListMovies;
         }
     }
 }
