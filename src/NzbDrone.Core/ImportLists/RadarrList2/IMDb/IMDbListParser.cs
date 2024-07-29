@@ -43,16 +43,16 @@ namespace NzbDrone.Core.ImportLists.RadarrList2.IMDbList
             var isUserList = importListResponse.HttpRequest.Url.Path.StartsWith("/user/");
 
             var html = importListResponse.Content;
-            var i = html.IndexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">");
-            var k = html.IndexOf(">", i);
-            var j = html.IndexOf("</script", k);
-            var jx = html.Substring(k + 1, j - k - 1);
+            var jsonStartIndex = html.IndexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">");
+            jsonStartIndex = html.IndexOf(">", jsonStartIndex);
+            var jsonEndIndex = html.IndexOf("</script", jsonStartIndex);
+            var json = html.Substring(jsonStartIndex + 1, jsonEndIndex - jsonStartIndex - 1);
 
-            var jxr = jx.Replace("/", "~").Replace("\\x", "#x#"); // Adjust any JSON escape chars
-            var jsdata = JObject.Parse(jxr);
+            json = json.Replace("/", "~").Replace("\\x", "#x#"); // Adjust any JSON escape chars
+            var jsonData = JObject.Parse(json);
 
             var listName = isUserList ? "predefinedList" : "list"; // different node user list
-            var listItemEdges = jsdata.SelectToken($"props.pageProps.mainColumnData.{listName}.titleListItemSearch.edges") as JArray;
+            var listItemEdges = jsonData.SelectToken($"props.pageProps.mainColumnData.{listName}.titleListItemSearch.edges") as JArray;
 
             if (listItemEdges == null)
             {
