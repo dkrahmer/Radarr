@@ -20,7 +20,13 @@ namespace Radarr.Http.Frontend.Mappers
         {
             _configFileProvider = configFileProvider;
 
-            HtmlPath = Path.Combine(appFolderInfo.StartUpFolder, _configFileProvider.UiFolder, "index.html");
+            var uiFolder = Path.GetFullPath(Path.Combine(appFolderInfo.StartUpFolder, _configFileProvider.UiFolder));
+            if (!diskProvider.FolderExists(uiFolder))
+            {
+                uiFolder = Path.Combine(appFolderInfo.StartUpFolder, "UI");
+            }
+
+            HtmlPath = Path.Combine(uiFolder, "index.html");
             UrlBase = configFileProvider.UrlBase;
         }
 
