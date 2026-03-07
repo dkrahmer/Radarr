@@ -12,7 +12,12 @@
     <ItemGroup>
       <Frameworks Include="$(TargetFrameworks)" />
 
-      <Combined Include="$(RuntimeIdentifiers)">
+      <!-- SinglePublishRid can be set on the command line to build only one RID without
+           overriding the project-level RuntimeIdentifiers used by restore. -->
+      <_RidsToPublish Include="$(SinglePublishRid)" Condition="'$(SinglePublishRid)' != ''" />
+      <_RidsToPublish Include="$(RuntimeIdentifiers)" Condition="'$(SinglePublishRid)' == ''" />
+
+      <Combined Include="@(_RidsToPublish)">
         <Framework>%(Frameworks.Identity)</Framework>
       </Combined>
 
@@ -22,7 +27,9 @@
       </Renamed>
 
       <!-- Transform RuntimeIdentifierForPublish items to project items to pass to MSBuild task -->
-      <ProjectToPublish Include="@(Renamed->'$(MSBuildProjectFullPath)')">
+      <!-- Skip combinations where a Windows-specific TFM is paired with a non-Windows RID -->
+      <ProjectToPublish Include="@(Renamed->'$(MSBuildProjectFullPath)')"
+                        Condition="!$([System.String]::new('%(Renamed.Framework)').Contains('-windows')) OR $([System.String]::new('%(Renamed.Runtime)').StartsWith('win'))">
         <AdditionalProperties>RuntimeIdentifier=%(Renamed.Runtime);TargetFramework=%(Renamed.Framework)</AdditionalProperties>
       </ProjectToPublish>
     </ItemGroup>

@@ -4,11 +4,15 @@
     <AnalysisLevel>6.0-all</AnalysisLevel>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <EnableAnalyzers>false</EnableAnalyzers>
 	<ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
 
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <RuntimeIdentifiers>win-x64;win-x86;osx-x64;osx-arm64;linux-x64;linux-musl-x64;linux-arm;linux-musl-arm;linux-arm64;linux-musl-arm64</RuntimeIdentifiers>
+    <!-- SDK 7+ places ref assemblies in RID-specific intermediate paths, causing race conditions
+         in parallel multi-RID PublishAllRids builds. Disabling avoids the ref\*.dll lookup entirely. -->
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 
     <RadarrRootDir>$(MSBuildThisFileDirectory)..\</RadarrRootDir>
 
@@ -37,6 +41,7 @@
         CS1591: Missing XML comment for publicly visible type or member 'Type_or_Member'
     -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);NETSDK1138;NETSDK1201</MSBuildWarningsAsMessages>
   </PropertyGroup>
 
   <PropertyGroup>

@@ -85,14 +85,9 @@ Build()
     then
         dotnet msbuild $slnFile -p:Configuration=Release -p:Platform=$platform -t:PublishAllRids
     else
-        # When building for a specific RID, filter out incompatible platform-specific projects
-        local buildFilter=""
-        if [[ "$RID" == linux-* ]] || [[ "$RID" == osx-* ]] || [[ "$RID" == freebsd-* ]]; then
-            # Skip Windows-only projects for non-Windows platforms
-            buildFilter="-p:BuildProjectReferences=false"
-        fi
-        
-        dotnet msbuild $slnFile -p:Configuration=Release -p:Platform=$platform -p:RuntimeIdentifier=$RID $buildFilter -t:PublishAllRids
+        # Pass SinglePublishRid to restrict PublishAllRids to only the requested RID without
+        # overriding project-level RuntimeIdentifiers (needed for restore assets compatibility)
+        dotnet msbuild $slnFile -p:Configuration=Release -p:Platform=$platform -p:RuntimeIdentifier=$RID -p:SinglePublishRid=$RID -t:PublishAllRids
     fi
 
     ProgressEnd 'Build'
@@ -451,3 +446,25 @@ then
     BuildInstaller "net6.0" "win-x86"
     RemoveInno
 fi
+
+echo ""
+echo "Build complete. Output directories:"
+if [ -d "$outputFolder/UI" ]; then
+    echo "  $outputFolder/UI"
+fi
+if [[ -n "$RID" && -n "$FRAMEWORK" ]]; then
+    targetRids=("$RID")
+    targetFramework="$FRAMEWORK"
+else
+    targetRids=("win-x64" "win-x86" "linux-x64" "linux-musl-x64" "linux-arm64" "linux-musl-arm64" "linux-arm" "linux-musl-arm" "osx-x64" "osx-arm64")
+    if [ "$ENABLE_EXTRA_PLATFORMS" = "YES" ]; then
+        targetRids+=("freebsd-x64" "linux-x86")
+    fi
+    targetFramework="net6.0"
+fi
+for rid in "${targetRids[@]}"; do
+    dir="$outputFolder/$targetFramework/$rid/publish"
+    if [ -d "$dir" ]; then
+        echo "  $dir"
+    fi
+done
