@@ -35,10 +35,10 @@ namespace NzbDrone.Common.EnvironmentInfo
 
         static RuntimeInfo()
         {
-            var officialBuild = InternalIsOfficialBuild();
+            var officialBuild = true; // InternalIsOfficialBuild();
 
             // An build running inside of the testing environment. (Analytics disabled)
-            IsTesting = InternalIsTesting();
+            IsTesting = false; // InternalIsTesting();
 
             // An official build running outside of the testing environment. (Analytics configurable)
             IsProduction = !IsTesting && officialBuild;
