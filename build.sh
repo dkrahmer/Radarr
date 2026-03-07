@@ -64,7 +64,7 @@ Build()
     ProgressStart 'Build'
 
     rm -rf $outputFolder
-    rm -rf $testPackageFolder
+    #rm -rf $testPackageFolder
 
     slnFile=src/Radarr.sln
 
@@ -77,11 +77,22 @@ Build()
     dotnet clean $slnFile -c Debug
     dotnet clean $slnFile -c Release
 
+    # Run restore separately with properties to avoid Xamarin fallback folder issue
+    echo "Restoring NuGet packages..."
+    dotnet restore $slnFile -p:RestoreAdditionalProjectFallbackFolders="" -p:RestoreAdditionalProjectFallbackFoldersExcludes="**"
+
     if [[ -z "$RID" || -z "$FRAMEWORK" ]];
     then
-        dotnet msbuild -restore $slnFile -p:Configuration=Release -p:Platform=$platform -t:PublishAllRids
+        dotnet msbuild $slnFile -p:Configuration=Release -p:Platform=$platform -t:PublishAllRids
     else
-        dotnet msbuild -restore $slnFile -p:Configuration=Release -p:Platform=$platform -p:RuntimeIdentifiers=$RID -t:PublishAllRids
+        # When building for a specific RID, filter out incompatible platform-specific projects
+        local buildFilter=""
+        if [[ "$RID" == linux-* ]] || [[ "$RID" == osx-* ]] || [[ "$RID" == freebsd-* ]]; then
+            # Skip Windows-only projects for non-Windows platforms
+            buildFilter="-p:BuildProjectReferences=false"
+        fi
+        
+        dotnet msbuild $slnFile -p:Configuration=Release -p:Platform=$platform -p:RuntimeIdentifier=$RID $buildFilter -t:PublishAllRids
     fi
 
     ProgressEnd 'Build'
