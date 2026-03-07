@@ -41,10 +41,8 @@ namespace NzbDrone.Core.ImportLists.RadarrList2
                     listResponse.HttpResponse.StatusCode);
             }
 
-            if (listResponse.HttpResponse.Headers.ContentType != null &&
-                listResponse.HttpResponse.Headers.ContentType.Contains("text/json") &&
-                listResponse.HttpRequest.Headers.Accept != null &&
-                !listResponse.HttpRequest.Headers.Accept.Contains("text/json"))
+            if ((listResponse.HttpResponse.Headers.ContentType?.Contains("text/json") ?? false)
+                 && !(listResponse.HttpRequest.Headers.Accept?.Contains("text/json") ?? false))
             {
                 throw new ImportListException(listResponse,
                     "Radarr API responded with html content. Site is likely blocked or unavailable.");
