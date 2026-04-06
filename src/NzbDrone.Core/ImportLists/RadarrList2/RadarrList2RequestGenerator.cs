@@ -18,7 +18,7 @@ namespace NzbDrone.Core.ImportLists.RadarrList2
 
             var httpRequest = GetHttpRequest();
 
-            var request = new ImportListRequest(httpRequest.Url.ToString(), new HttpAccept(httpRequest.Headers.Accept));
+            var request = new ImportListRequest(httpRequest);
 
             request.HttpRequest.SuppressHttpError = true;
 
