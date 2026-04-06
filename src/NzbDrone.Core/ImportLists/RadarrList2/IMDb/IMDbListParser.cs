@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NzbDrone.Common.Extensions;
@@ -39,8 +40,9 @@ namespace NzbDrone.Core.ImportLists.RadarrList2.IMDbList
                 return jsonResponse.SelectList(m => new ImportListMovie { TmdbId = m.TmdbId });
             }
 
-
-            var isUserList = importListResponse.HttpRequest.Url.Path.StartsWith("/user/");
+            var userUrlSignifier = "/user/";
+            var isUserList = importListResponse.HttpRequest.Url.Path.StartsWith(userUrlSignifier)
+                || (importListResponse.HttpRequest.ContentData != null && Encoding.UTF8.GetString(importListResponse.HttpRequest.ContentData).Contains(userUrlSignifier));
 
             var html = importListResponse.Content;
             var jsonStartIndex = html.IndexOf("<script id=\"__NEXT_DATA__\" type=\"application/json\">");
