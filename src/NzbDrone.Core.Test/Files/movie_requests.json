@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "imdb_id": "tt1375666",
+    "tmdb_id": "27205",
+    "title": "Inception",
+    "year": "2010"
+  },
+  {
+    "id": 2,
+    "imdb_id": "tt0816692",
+    "tmdb_id": "157336",
+    "title": "Interstellar",
+    "year": "2014"
+  }
+]
